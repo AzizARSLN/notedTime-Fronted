@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* 2026 Premium Palette - Light Mode */
+  --app-bg: #f8fafc;
+  --panel-bg: rgba(255, 255, 255, 0.7);
+  --panel-border: rgba(226, 232, 240, 0.8);
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.15);
+  --accent: #f43f5e;
+  --text-main: #0f172a;
+  --text-muted: #334155;
+  --glass-blur: 16px;
+}
+
+.dark {
+  /* 2026 Premium Palette - Dark Mode (Deep Matte) */
+  --app-bg: #020617;
+  --panel-bg: rgba(15, 23, 42, 0.6);
+  --panel-border: rgba(30, 41, 59, 0.5);
+  --primary: #818cf8;
+  --primary-glow: rgba(129, 140, 248, 0.2);
+  --accent: #fb7185;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--app-bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+}
+
+/* Premium Glassmorphism */
+.premium-glass {
+  background: var(--panel-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .premium-glass {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Smooth Inputs */
+.form-input {
+  @apply w-full px-5 py-4 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none transition-all duration-300;
+  color: var(--text-main);
+}
+
+.form-input:focus {
+  @apply border-indigo-500/50 ring-4 ring-indigo-500/10 scale-[1.01];
+}
+
+/* Premium Buttons */
+.btn-action {
+  @apply px-6 py-3.5 rounded-2xl font-bold transition-all duration-300 active:scale-95 flex items-center justify-center gap-2;
+}
+
+.btn-primary {
+  @apply btn-action bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25;
+}
+
+.btn-secondary {
+  @apply btn-action bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700;
+}
+
+/* Custom Scrollbar - Minimal and sleek */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--panel-border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Animations */
+@keyframes revealScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-reveal {
+  animation: revealScale 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .form-input {
+    @apply py-3.5 text-base;
+  }
+}
