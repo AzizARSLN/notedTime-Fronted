@@ -1,5 +1,5 @@
-import React from 'react';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import type { ModuleType, DateString } from '../../types';
 
 interface AddModuleModalProps {
@@ -9,20 +9,22 @@ interface AddModuleModalProps {
   selectedDate: DateString | null;
 }
 
-const moduleOptions = [
-  { id: 'financial', icon: '💰', title: 'Finans', desc: 'Gider, gelir ve borç takibi', color: 'from-emerald-400 to-emerald-600', shadow: 'shadow-emerald-500/20' },
-  { id: 'reminder', icon: '🔔', title: 'Hatırlatıcı', desc: 'Görevler ve randevular', color: 'from-rose-400 to-rose-600', shadow: 'shadow-rose-500/20' },
-  { id: 'note', icon: '📝', title: 'Notlar', desc: 'Günlük kayıtlar ve yapılacaklar', color: 'from-amber-400 to-amber-600', shadow: 'shadow-amber-500/20' },
-  { id: 'travel', icon: '✈️', title: 'Seyahat', desc: 'Rotalar ve yol arkadaşları', color: 'from-blue-400 to-blue-600', shadow: 'shadow-blue-500/20' },
-  { id: 'counter', icon: '📊', title: 'Sayaçlar', desc: 'Alışkanlıklar ve ilerleme', color: 'from-purple-400 to-purple-600', shadow: 'shadow-purple-500/20' },
-];
-
 const AddModuleModal: React.FC<AddModuleModalProps> = ({
   isOpen,
   onClose,
   onSelectModule,
   selectedDate
 }) => {
+  const { t } = useTranslation();
+
+  const moduleOptions = [
+    { id: 'financial', icon: '💰', title: t('modals.addModule.financial.title'), desc: t('modals.addModule.financial.desc'), color: 'from-emerald-400 to-emerald-600', shadow: 'shadow-emerald-500/20' },
+    { id: 'reminder', icon: '🔔', title: t('modals.addModule.reminder.title'), desc: t('modals.addModule.reminder.desc'), color: 'from-rose-400 to-rose-600', shadow: 'shadow-rose-500/20' },
+    { id: 'note', icon: '📝', title: t('modals.addModule.note.title'), desc: t('modals.addModule.note.desc'), color: 'from-amber-400 to-amber-600', shadow: 'shadow-amber-500/20' },
+    { id: 'travel', icon: '✈️', title: t('modals.addModule.travel.title'), desc: t('modals.addModule.travel.desc'), color: 'from-blue-400 to-blue-600', shadow: 'shadow-blue-500/20' },
+    { id: 'counter', icon: '📊', title: t('modals.addModule.counter.title'), desc: t('modals.addModule.counter.desc'), color: 'from-purple-400 to-purple-600', shadow: 'shadow-purple-500/20' },
+  ];
+
   if (!isOpen) return null;
 
   return (
@@ -36,11 +38,11 @@ const AddModuleModal: React.FC<AddModuleModalProps> = ({
           {/* 2026 Premium Header */}
           <div className="px-12 py-10 border-b border-white/10 dark:border-white/5 flex items-center justify-between">
             <div>
-              <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">Yeni Kayıt</h2>
+              <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter">{t('modals.addModule.title')}</h2>
               <div className="flex items-center gap-2 mt-2">
                 <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
                 <p className="text-slate-500 font-bold uppercase tracking-[0.2em] text-xs">
-                  {selectedDate || 'Takvimden bir tarih seçin'}
+                  {selectedDate || t('modals.addModule.selectDate')}
                 </p>
               </div>
             </div>
@@ -83,7 +85,7 @@ const AddModuleModal: React.FC<AddModuleModalProps> = ({
                 <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center mb-4">
                   <PlusIcon className="w-6 h-6 text-slate-300" />
                 </div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Yakında daha fazlası</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{t('modals.addModule.comingSoon')}</p>
               </div>
             </div>
           </div>

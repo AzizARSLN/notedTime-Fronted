@@ -1,130 +1,93 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Calendar from './components/Calendar/Calendar';
+import AddModuleModal from './components/Modals/AddModuleModal';
 import FinancialForm from './components/Forms/FinancialForm';
 import ReminderForm from './components/Forms/ReminderForm';
 import NoteForm from './components/Forms/NoteForm';
 import TravelForm from './components/Forms/TravelForm';
 import CounterForm from './components/Forms/CounterForm';
-import AddModuleModal from './components/Modals/AddModuleModal';
 import type { DateString, FinancialRecord, Reminder, Note, Travel, Counter } from './types';
 
 import {
-  SunIcon,
-  MoonIcon,
-  BellIcon,
-  XMarkIcon
+  XMarkIcon,
+  ArrowRightOnRectangleIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import LoginPage from './components/Login/LoginPage';
 
-import { useEffect } from 'react';
-
-const App: React.FC = () => {
+function App() {
+  const { t, i18n } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('isLoggedIn') === 'true';
   });
-  const [user, setUser] = useState<string | null>(() => {
-    return localStorage.getItem('user');
-  });
+  const [user, setUser] = useState<string | null>(localStorage.getItem('user'));
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  const [selectedDate, setSelectedDate] = useState<DateString | null>(null);
-  const [activeForm, setActiveForm] = useState<'financial' | 'reminder' | 'note' | 'travel' | 'counter' | null>(null);
-  const [isAddModuleModalOpen, setIsAddModuleModalOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('theme') as 'light' | 'dark') || 'light';
-  });
+  const languages = [
+    { code: 'tr', flag: '🇹🇷', name: 'Türkçe' },
+    { code: 'en', flag: '🇺🇸', name: 'English' },
+    { code: 'de', flag: '🇩🇪', name: 'Deutsch' },
+    { code: 'ru', flag: '🇷🇺', name: 'Русский' },
+    { code: 'uz', flag: '🇺🇿', name: 'Oʻzbekcha' },
+    { code: 'ar', flag: '🇸🇦', name: 'العربية' }
+  ];
+
+  const currentLang = languages.find(l => l.code === i18n.language) || languages[0];
 
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    document.documentElement.classList.add('dark');
+  }, []);
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
-
-  const [financialRecords, setFinancialRecords] = useState<FinancialRecord[]>([
+  const [financialRecords] = useState<FinancialRecord[]>([
     {
       id: '1',
       type: 'expense',
-      date: '15.12.2024',
+      date: new Date().toISOString().split('T')[0],
       category: 'Market',
       quantity: 1,
-      unitAmount: 150,
+      unitAmount: 450.50,
       currency: 'TRY',
-      total: 150,
-      counterparty: ['Market A'],
-      installments: 1,
       isPlanned: false,
       isShared: false,
+      total: 450.50,
+      counterparty: ['Migros'],
+      installments: 1,
       paymentStatus: 'paid',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
   ]);
-  const [reminders, setReminders] = useState<Reminder[]>([
+  const [reminders] = useState<Reminder[]>([
     {
       id: '1',
       type: 'meeting',
-      title: 'Takım Toplantısı',
-      date: '15.12.2024',
-      time: '14:00',
-      participants: ['Ahmet', 'Mehmet'],
+      date: new Date().toISOString().split('T')[0],
+      title: 'Haftalık Senkronizasyon',
+      time: '10:00',
+      description: 'Ekip toplantısı',
+      isCritical: true,
+      participants: [],
       warningTime: '15min',
       repeat: 'none',
-      isCritical: true,
       isShared: false,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
   ]);
-  const [notes, setNotes] = useState<Note[]>([
-    {
-      id: '1',
-      title: 'Proje Notları',
-      content: 'Önemli proje detayları',
-      category: 'İş',
-      date: '15.12.2024',
-      isCritical: false,
-      todoItems: [
-        { id: '1', text: 'Dokümantasyon hazırla', isCompleted: false },
-        { id: '2', text: 'Test yap', isCompleted: true }
-      ],
-      assignedPeople: ['Ben'],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ]);
-  const [travels, setTravels] = useState<Travel[]>([
-    {
-      id: '1',
-      from: 'İstanbul',
-      to: 'Ankara',
-      dateRange: { start: '15.12.2024', end: '17.12.2024' },
-      companions: ['Aile'],
-      dailyNotes: [],
-      totalKm: 450,
-      color: '#10B981',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ]);
-  const [counters, setCounters] = useState<Counter[]>([
-    {
-      id: '1',
-      type: 'Su İçme',
-      date: '15.12.2024',
-      value: 8,
-      dailyTarget: 10,
-      isShared: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  ]);
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [notes] = useState<Note[]>([]);
+  const [travels] = useState<Travel[]>([]);
+  const [counters] = useState<Counter[]>([]);
+
+  const [selectedDate, setSelectedDate] = useState<DateString | null>(null);
+  const [activeForm, setActiveForm] = useState<'add' | 'financial' | 'reminder' | 'note' | 'travel' | 'counter' | null>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleLogin = (username: string) => {
     setIsLoggedIn(true);
@@ -140,13 +103,20 @@ const App: React.FC = () => {
     localStorage.removeItem('user');
   };
 
-  // Tarih seçimi
-  const handleDateSelect = (date: DateString) => {
-    if (date) {
-      setSelectedDate(date);
-      setIsAddModuleModalOpen(true);
-    } else {
-      setSelectedDate(null);
+  const renderActiveForm = () => {
+    switch (activeForm) {
+      case 'financial':
+        return <FinancialForm selectedDate={selectedDate} onSave={() => setActiveForm(null)} onCancel={() => setActiveForm(null)} />;
+      case 'reminder':
+        return <ReminderForm onSave={() => setActiveForm(null)} onCancel={() => setActiveForm(null)} />;
+      case 'note':
+        return <NoteForm onSave={() => setActiveForm(null)} onCancel={() => setActiveForm(null)} />;
+      case 'travel':
+        return <TravelForm onSave={() => setActiveForm(null)} onCancel={() => setActiveForm(null)} />;
+      case 'counter':
+        return <CounterForm selectedDate={selectedDate} onSave={() => setActiveForm(null)} onCancel={() => setActiveForm(null)} />;
+      default:
+        return null;
     }
   };
 
@@ -154,226 +124,170 @@ const App: React.FC = () => {
     return <LoginPage onLogin={handleLogin} />;
   }
 
-  // Form açma
-  const handleOpenForm = (formType: typeof activeForm) => {
-    setActiveForm(formType);
-  };
-
-  // Form kapatma
-  const handleCloseForm = () => {
-    setActiveForm(null);
-    setSelectedDate(null);
-  };
-
-  // Finansal kayıt kaydetme
-  const handleSaveFinancial = () => {
-    // Burada API çağrısı yapılacak
-    console.log('Finansal kayıt kaydedildi');
-    handleCloseForm();
-  };
-
-  // Hatırlatıcı kaydetme
-  const handleSaveReminder = () => {
-    // Burada API çağrısı yapılacak
-    console.log('Hatırlatıcı kaydedildi');
-    handleCloseForm();
-  };
-
-  // Not kaydetme
-  const handleSaveNote = () => {
-    // Burada API çağrısı yapılacak
-    console.log('Not kaydedildi');
-    handleCloseForm();
-  };
-
-  // Seyahat kaydetme
-  const handleSaveTravel = () => {
-    // Burada API çağrısı yapılacak
-    console.log('Seyahat kaydedildi');
-    handleCloseForm();
-  };
-
-  // Sayaç kaydetme
-  const handleSaveCounter = () => {
-    // Burada API çağrısı yapılacak
-    console.log('Sayaç kaydedildi');
-    handleCloseForm();
-  };
-
-  // Hızlı eylemler
-  const handleQuickAction = (action: string, moduleId: string) => {
-    console.log('Hızlı eylem:', action, moduleId);
-  };
-
   return (
-    <div className="h-screen overflow-hidden flex flex-col">
-      {/* 2026 Premium Ultra-Thin Header */}
-      <header className="premium-glass sticky top-0 z-[100] border-b border-white/10 dark:border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center h-20">
-            {/* Logo Section */}
-            <div className="flex items-center gap-4">
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
-                <div className="relative flex items-center justify-center w-12 h-12 bg-white dark:bg-slate-900 rounded-2xl shadow-xl">
-                  <span className="text-xl font-black bg-gradient-to-br from-indigo-600 to-purple-600 bg-clip-text text-transparent italic">NT</span>
-                </div>
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase">NotedTime</h1>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Enterprise Time & Finance Management</span>
-                </div>
+    <div className="flex flex-col h-screen bg-white dark:bg-slate-950 font-sans selection:bg-indigo-500/30">
+      {/* 2026 Aurora Header */}
+      <header className="h-20 border-b border-slate-200 dark:border-white/5 flex items-center justify-between px-10 relative z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-3xl">
+        <div className="flex items-center gap-12">
+          {/* Logo Section */}
+          <div className="flex items-center gap-4 group cursor-pointer">
+            <div className="relative p-0.5 bg-gradient-to-br from-slate-400 to-slate-600 rounded-2xl shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
+              <div className="flex items-center justify-center w-10 h-10 bg-slate-950 rounded-[14px] overflow-hidden">
+                <span className="text-base font-black text-white tracking-tighter relative -left-[0.5px]">N</span>
+                <div className="w-[1.5px] h-4 bg-indigo-500 mx-0.5 rotate-[20deg] rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]"></div>
+                <span className="text-base font-black text-white tracking-tighter relative -right-[0.5px]">T</span>
               </div>
             </div>
+            <div className="flex flex-col">
+              <div className="flex items-baseline gap-1">
+                <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tighter leading-none uppercase">Noted</h1>
+                <span className="text-xl font-light text-indigo-500 tracking-tighter leading-none uppercase">Time</span>
+              </div>
+              <span className="text-[8px] font-black text-slate-400 dark:text-white/40 uppercase tracking-[0.3em] mt-0.5">Enterprise 2026</span>
+            </div>
+          </div>
 
-            {/* Centered Actions */}
-            <nav className="hidden lg:flex items-center gap-1 p-1 bg-slate-100/50 dark:bg-white/5 rounded-2xl border border-white/10">
-              <button className="px-5 py-2 text-sm font-bold text-indigo-600 dark:text-indigo-400 bg-white dark:bg-slate-800 rounded-xl shadow-sm transition-all">Panel</button>
-              <button className="px-5 py-2 text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all">Analiz</button>
-              <button className="px-5 py-2 text-sm font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all">Raporlar</button>
-            </nav>
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center gap-4">
+            <button className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-black uppercase tracking-widest shadow-xl shadow-slate-900/10 dark:shadow-white/5 transition-all hover:scale-105">{t('nav.dashboard')}</button>
+            <button className="px-5 py-2.5 rounded-xl text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white text-[10px] font-black uppercase tracking-widest transition-all">{t('nav.analytics')}</button>
+            <button className="px-5 py-2.5 rounded-xl text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white text-[10px] font-black uppercase tracking-widest transition-all">{t('nav.reports')}</button>
+          </nav>
+        </div>
 
-            {/* System Actions */}
-            <div className="flex items-center gap-3">
+        <div className="flex items-center gap-6">
+          {/* Digital Clock */}
+          <div className="hidden lg:flex flex-col items-end">
+            <span className="text-xs font-black text-slate-900 dark:text-white tracking-widest tabular-nums">
+              {currentTime.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+            <span className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">{t('footer.live')}</span>
+          </div>
+
+          <div className="h-6 w-1px bg-slate-200 dark:bg-white/10 mx-2" />
+
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            {/* Language Switcher */}
+            <div className="relative">
               <button
-                onClick={toggleTheme}
-                className="w-11 h-11 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 rounded-2xl transition-all shadow-sm border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                onClick={() => setShowLangMenu(!showLangMenu)}
+                className="w-11 h-11 flex items-center justify-center rounded-2xl bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800 transition-all active:scale-90"
               >
-                {theme === 'light' ? <MoonIcon className="w-5 h-5 text-slate-900" /> : <SunIcon className="w-5 h-5 text-amber-400" />}
+                <span className="text-lg">{currentLang.flag}</span>
               </button>
 
-              <button className="relative w-11 h-11 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 rounded-2xl transition-all shadow-sm border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
-                <BellIcon className="w-5 h-5 ml-0" />
-                <span className="absolute top-3 right-3 w-2 h-2 bg-rose-500 rounded-full ring-4 ring-white dark:ring-slate-900"></span>
-              </button>
+              {showLangMenu && (
+                <div className="absolute right-0 mt-3 w-40 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-1.5 z-[200] animate-scale-in">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        i18n.changeLanguage(lang.code);
+                        setShowLangMenu(false);
+                        document.dir = lang.code === 'ar' ? 'rtl' : 'ltr';
+                      }}
+                      className={`w-full flex items-center gap-3 px-3 h-10 rounded-xl transition-all ${i18n.language === lang.code ? 'bg-indigo-500 text-white' : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-600 dark:text-slate-400'}`}
+                    >
+                      <span className="text-xl">{lang.flag}</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider">{lang.name}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
-              <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
-
+            {/* Profile Dropdown */}
+            <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-3 p-1.5 pl-4 bg-slate-100 dark:bg-white/5 hover:bg-white dark:hover:bg-slate-800 rounded-[1.25rem] transition-all border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group"
+                className="flex items-center gap-3 pl-2 pr-4 py-2 bg-slate-100/50 dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/5 hover:bg-white dark:hover:bg-slate-800 transition-all active:scale-95 group"
               >
-                <div className="hidden md:block text-right">
-                  <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tighter">{user}</p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase">Pro Elite</p>
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center text-[10px] font-black text-white shadow-lg">
+                  {user?.substring(0, 2).toUpperCase()}
                 </div>
-                <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 group-hover:rotate-6 transition-transform">
-                  <span className="text-xs font-black">AA</span>
+                <div className="flex flex-col items-start translate-y-[-1px]">
+                  <span className="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-tight">{user}</span>
+                  <span className="text-[8px] font-bold text-indigo-500 uppercase tracking-widest opacity-80">{t('user.role')}</span>
                 </div>
+                <ChevronDownIcon className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${showUserMenu ? 'rotate-180' : ''}`} />
               </button>
+
+              {showUserMenu && (
+                <div className="absolute right-0 mt-3 w-48 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 z-[200] animate-scale-in">
+                  <div className="px-3 py-2 border-b border-slate-100 dark:border-white/5 mb-2">
+                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{t('user.account')}</p>
+                    <p className="text-[10px] font-bold text-slate-900 dark:text-white mt-1 truncate">{user}</p>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all"
+                  >
+                    <ArrowRightOnRectangleIcon className="w-4 h-4" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">{t('user.logout')}</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content Area - Full screen minus header */}
-      <main className="flex-1 overflow-hidden relative">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-hidden flex flex-col relative">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-[120px] -mr-48 -mt-48 transition-all duration-1000" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500/5 dark:bg-purple-500/10 rounded-full blur-[100px] -ml-32 -mb-32 transition-all duration-1000" />
 
-        <div className="h-full animate-reveal">
-          <Calendar
-            financialRecords={financialRecords}
-            reminders={reminders}
-            notes={notes}
-            travels={travels}
-            counters={counters}
-            onDateSelect={handleDateSelect}
-            onQuickAction={handleQuickAction}
-            onSelectModule={handleOpenForm}
-          />
-        </div>
+        <Calendar
+          financialRecords={financialRecords}
+          reminders={reminders}
+          notes={notes}
+          travels={travels}
+          counters={counters}
+          onDateSelect={(date) => {
+            setSelectedDate(date as DateString);
+            setActiveForm('add');
+          }}
+        />
       </main>
 
-      {/* Modül ekleme modal'ı (Seçici) */}
       <AddModuleModal
-        isOpen={isAddModuleModalOpen && !activeForm}
-        onClose={() => {
-          setIsAddModuleModalOpen(false);
-          setSelectedDate(null);
-        }}
-        onSelectModule={handleOpenForm}
+        isOpen={activeForm === 'add'}
+        onClose={() => setActiveForm(null)}
+        onSelectModule={(type) => setActiveForm(type as any)}
         selectedDate={selectedDate}
       />
 
-      {/* Aktif Form Modalı */}
-      {activeForm && (
-        <div className="fixed inset-0 z-[10000] overflow-y-auto">
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md" onClick={handleCloseForm} />
-          <div className="flex min-h-full items-center justify-center p-4">
-            <div className="relative w-full max-w-2xl transform overflow-hidden rounded-[2.5rem] bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800 animate-scale-in p-8 sm:p-10">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                    {activeForm === 'financial' && '💰 Finansal Kayıt'}
-                    {activeForm === 'reminder' && '🔔 Hatırlatıcı'}
-                    {activeForm === 'note' && '📝 Not'}
-                    {activeForm === 'travel' && '✈️ Seyahat'}
-                    {activeForm === 'counter' && '📊 Sayaç'}
-                  </h2>
-                  <p className="text-slate-500 font-medium mt-1">
-                    {selectedDate && `Tarih: ${selectedDate}`}
-                  </p>
+      {/* Generic Form Modal */}
+      {activeForm && activeForm !== 'add' && (
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center p-6">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-2xl animate-fade-in" onClick={() => setActiveForm(null)} />
+          <div className="relative w-full max-w-2xl bg-white/90 dark:bg-slate-900/90 rounded-[2.5rem] premium-glass p-8 sm:p-12 animate-slide-up shadow-2xl border border-white/20 dark:border-white/5">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h3 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter uppercase">
+                  {t(`modals.addModule.${activeForm}.title`)}
+                </h3>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{selectedDate}</p>
                 </div>
-                <button onClick={handleCloseForm} className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-400 hover:text-slate-600 transition-all">
-                  <XMarkIcon className="w-6 h-6" />
-                </button>
               </div>
-
-              <div className="custom-scrollbar max-h-[70vh] overflow-y-auto pr-2">
-                {activeForm === 'financial' && (
-                  <FinancialForm
-                    selectedDate={selectedDate}
-                    onSave={handleSaveFinancial}
-                    onCancel={handleCloseForm}
-                  />
-                )}
-                {activeForm === 'reminder' && (
-                  <ReminderForm
-                    selectedDate={selectedDate}
-                    onSave={handleSaveReminder}
-                    onCancel={handleCloseForm}
-                  />
-                )}
-                {activeForm === 'note' && (
-                  <NoteForm
-                    selectedDate={selectedDate}
-                    onSave={handleSaveNote}
-                    onCancel={handleCloseForm}
-                  />
-                )}
-                {activeForm === 'travel' && (
-                  <TravelForm
-                    selectedDate={selectedDate}
-                    onSave={handleSaveTravel}
-                    onCancel={handleCloseForm}
-                  />
-                )}
-                {activeForm === 'counter' && (
-                  <CounterForm
-                    selectedDate={selectedDate}
-                    onCancel={handleCloseForm}
-                    onSave={handleSaveCounter}
-                  />
-                )}
-              </div>
+              <button
+                onClick={() => setActiveForm(null)}
+                className="w-12 h-12 flex items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm active:scale-95"
+              >
+                <XMarkIcon className="w-6 h-6" />
+              </button>
             </div>
+            {renderActiveForm()}
           </div>
         </div>
       )}
 
-      {/* Kullanıcı menüsü dışına tıklandığında kapat */}
-      {showUserMenu && (
-        <div
-          className="fixed inset-0 z-20"
-          onClick={() => setShowUserMenu(false)}
-        />
-      )}
+
     </div>
   );
-};
+}
 
 export default App;

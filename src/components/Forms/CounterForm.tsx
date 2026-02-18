@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 import type { DateString } from '../../types';
 
 interface CounterFormProps {
@@ -13,6 +14,7 @@ const CounterForm: React.FC<CounterFormProps> = ({
   onSave,
   onCancel
 }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     type: '',
     value: 0,
@@ -43,12 +45,12 @@ const CounterForm: React.FC<CounterFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6 animate-reveal">
       <div className="space-y-1.5">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">Sayaç Amacı</label>
+        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">{t('forms.counter.purpose')}</label>
         <input
           type="text"
           value={formData.type}
           onChange={(e) => handleFieldChange('type', e.target.value)}
-          placeholder="örn. Su (bardak)..."
+          placeholder={t('forms.counter.purposePlaceholder')}
           className="form-input py-3 text-base font-black text-center"
           required
         />
@@ -76,7 +78,7 @@ const CounterForm: React.FC<CounterFormProps> = ({
                 {formData.value}
               </span>
               <span className="text-[10px] font-black text-indigo-500 dark:text-indigo-400 uppercase tracking-widest mt-1">
-                Hedef: {formData.dailyTarget}
+                {t('forms.counter.target')}: {formData.dailyTarget}
               </span>
             </div>
 
@@ -101,7 +103,7 @@ const CounterForm: React.FC<CounterFormProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">Günlük Hedef</label>
+          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">{t('forms.counter.dailyTarget')}</label>
           <input
             type="number"
             value={formData.dailyTarget}
@@ -115,17 +117,17 @@ const CounterForm: React.FC<CounterFormProps> = ({
               <input type="checkbox" className="peer hidden" />
               <div className="w-5 h-5 rounded-md bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 peer-checked:bg-indigo-600 transition-all shadow-inner" />
             </div>
-            <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ortak Akış</span>
+            <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{t('forms.counter.sharedStream')}</span>
           </label>
         </div>
       </div>
 
       <div className="flex gap-3 pt-2">
         <button type="button" onClick={onCancel} className="flex-1 py-3 text-xs font-black text-slate-500 hover:text-slate-900 dark:hover:text-white bg-slate-100/50 dark:bg-white/5 rounded-xl transition-all active:scale-95 uppercase tracking-widest">
-          Vazgeç
+          {t('forms.common.cancel')}
         </button>
         <button type="submit" disabled={isSubmitting} className="flex-[2] py-3 bg-gradient-to-br from-indigo-600 to-purple-600 text-white text-xs font-black rounded-xl shadow-lg transition-all active:scale-95 disabled:opacity-50 uppercase tracking-[0.2em]">
-          {isSubmitting ? '...' : 'Kaydet'}
+          {isSubmitting ? '...' : t('forms.common.save')}
         </button>
       </div>
     </form>

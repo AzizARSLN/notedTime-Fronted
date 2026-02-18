@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import type { DateString, TodoItem } from '../../types';
+import { useTranslation } from 'react-i18next';
+import type { TodoItem } from '../../types';
 
 interface NoteFormProps {
-  selectedDate: DateString | null;
   onSave: () => void;
   onCancel: () => void;
 }
 
 const NoteForm: React.FC<NoteFormProps> = ({
-  selectedDate,
   onSave,
   onCancel
 }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -49,24 +49,24 @@ const NoteForm: React.FC<NoteFormProps> = ({
     <form onSubmit={handleSubmit} className="space-y-4 animate-reveal">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">Başlık</label>
+          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">{t('forms.common.title')}</label>
           <input
             type="text"
             value={formData.title}
             onChange={(e) => handleFieldChange('title', e.target.value)}
-            placeholder="Başlık yazın..."
+            placeholder={t('forms.note.titlePlaceholder')}
             className="form-input py-3 text-sm font-bold"
             required
           />
         </div>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">Kategori</label>
+          <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">{t('forms.common.category')}</label>
           <div className="flex gap-2">
             <input
               type="text"
               value={formData.category}
               onChange={(e) => handleFieldChange('category', e.target.value)}
-              placeholder="örn. İş, Özel"
+              placeholder={t('forms.note.categoryPlaceholder')}
               className="form-input py-3 text-sm font-bold flex-1"
             />
             <label className="flex items-center justify-center p-3 bg-slate-100 dark:bg-slate-800 rounded-xl cursor-pointer hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors">
@@ -83,11 +83,11 @@ const NoteForm: React.FC<NoteFormProps> = ({
       </div>
 
       <div className="space-y-1.5">
-        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">İçerik</label>
+        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] ml-2">{t('forms.note.content')}</label>
         <textarea
           value={formData.content}
           onChange={(e) => handleFieldChange('content', e.target.value)}
-          placeholder="Notunuzu buraya yazın..."
+          placeholder={t('forms.note.contentPlaceholder')}
           rows={3}
           className="form-input py-3 text-sm font-medium min-h-[100px]"
         />
@@ -100,7 +100,7 @@ const NoteForm: React.FC<NoteFormProps> = ({
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addItem())}
-            placeholder="Görev ekle..."
+            placeholder={t('forms.note.addTodo')}
             className="form-input py-2.5 text-xs font-bold flex-1"
           />
           <button type="button" onClick={addItem} className="p-3 bg-indigo-600/10 rounded-xl border border-indigo-500/10 flex items-center justify-center hover:bg-indigo-600/20 active:scale-95 transition-all">
@@ -116,17 +116,17 @@ const NoteForm: React.FC<NoteFormProps> = ({
             </div>
           ))}
           {formData.todoItems.length === 0 && (
-            <p className="text-[10px] font-bold text-slate-400 text-center py-2 uppercase tracking-widest">Görev yok</p>
+            <p className="text-[10px] font-bold text-slate-400 text-center py-2 uppercase tracking-widest">{t('forms.note.noTodos')}</p>
           )}
         </div>
       </div>
 
       <div className="flex gap-3 pt-2">
         <button type="button" onClick={onCancel} className="flex-1 py-3 text-xs font-black text-slate-500 hover:text-slate-900 dark:hover:text-white bg-slate-100/50 dark:bg-white/5 rounded-xl transition-all active:scale-95 uppercase tracking-widest">
-          Vazgeç
+          {t('forms.common.cancel')}
         </button>
         <button type="submit" disabled={isSubmitting} className="flex-[2] py-3 bg-gradient-to-br from-indigo-600 to-purple-600 text-white text-xs font-black rounded-xl shadow-lg transition-all active:scale-95 disabled:opacity-50 uppercase tracking-[0.2em]">
-          {isSubmitting ? '...' : 'Notu Kaydet'}
+          {isSubmitting ? '...' : t('forms.note.saveNote')}
         </button>
       </div>
     </form>

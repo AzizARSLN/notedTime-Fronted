@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import type { FinancialRecord, Reminder, Note, Travel, Counter } from '../../types';
+import type { FinancialRecord, Reminder, Note, Travel } from '../../types';
 
 interface CalendarCellProps {
   day: { date: Date };
@@ -17,7 +17,6 @@ interface CalendarCellProps {
   reminders: Reminder[];
   notes: Note[];
   travels: Travel[];
-  counters: Counter[];
 }
 
 const CalendarCell: React.FC<CalendarCellProps> = ({
@@ -34,8 +33,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
   financialRecords,
   reminders,
   notes,
-  travels,
-  counters
+  travels
 }) => {
   const date = day.date.getDate();
 

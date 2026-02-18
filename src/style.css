@@ -5,16 +5,16 @@
 @tailwind utilities;
 
 :root {
-  /* 2026 Premium Palette - Light Mode */
-  --app-bg: #f8fafc;
-  --panel-bg: rgba(255, 255, 255, 0.7);
-  --panel-border: rgba(226, 232, 240, 0.8);
-  --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.15);
+  /* 2026 Premium Palette - Light Mode (Aurora Soft) */
+  --app-bg: #fdfeff;
+  --panel-bg: rgba(255, 255, 255, 0.85);
+  --panel-border: rgba(235, 240, 250, 0.7);
+  --primary: #5a5ef1;
+  --primary-glow: rgba(90, 94, 241, 0.1);
   --accent: #f43f5e;
-  --text-main: #0f172a;
-  --text-muted: #334155;
-  --glass-blur: 16px;
+  --text-main: #1a1f36;
+  --text-muted: #525f7f;
+  --glass-blur: 24px;
 }
 
 .dark {
@@ -27,6 +27,7 @@
   --accent: #fb7185;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
+  --glass-blur: 16px;
 }
 
 * {

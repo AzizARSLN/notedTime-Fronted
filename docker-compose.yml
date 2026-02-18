@@ -1,0 +1,11 @@
+services:
+  app:
+    image: azizarslan/notedtime-fronted:latest
+    container_name: notedtime-fronted
+    ports:
+      - "85:80"
+    restart: always
+
+networks:
+  default:
+    name: notedtime-network
