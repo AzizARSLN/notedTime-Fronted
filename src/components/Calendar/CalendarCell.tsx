@@ -1,6 +1,6 @@
 import React from 'react';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import type { FinancialRecord, Reminder, Note, Travel } from '../../types';
+import type { FinancialRecord, Reminder, Note, Travel, Counter } from '../../types';
 
 interface CalendarCellProps {
   day: { date: Date };
@@ -17,6 +17,7 @@ interface CalendarCellProps {
   reminders: Reminder[];
   notes: Note[];
   travels: Travel[];
+  counters: Counter[];
 }
 
 const CalendarCell: React.FC<CalendarCellProps> = ({
@@ -33,7 +34,8 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
   financialRecords,
   reminders,
   notes,
-  travels
+  travels,
+  counters
 }) => {
   const date = day.date.getDate();
 
@@ -61,6 +63,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
           {financialRecords.length > 0 && <div className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900 shadow-sm" />}
           {reminders.length > 0 && <div className="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-900 shadow-sm" />}
           {notes.length > 0 && <div className="w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white dark:ring-slate-900 shadow-sm" />}
+          {counters.length > 0 && <div className="w-2 h-2 rounded-full bg-indigo-500 ring-2 ring-white dark:ring-slate-900 shadow-sm" />}
         </div>
       </div>
 
@@ -81,6 +84,11 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
             ✈️ {travels[0].to}
           </div>
         )}
+        {counters.slice(0, 1).map((c, i) => (
+          <div key={i} className="text-[10px] font-bold py-1 px-2 bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg truncate border border-indigo-500/10">
+            📊 {c.type}: {c.value}
+          </div>
+        ))}
       </div>
 
       {/* Quick Add Overlay */}

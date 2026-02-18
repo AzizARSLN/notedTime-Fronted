@@ -10,7 +10,6 @@ interface CounterFormProps {
 }
 
 const CounterForm: React.FC<CounterFormProps> = ({
-  selectedDate,
   onSave,
   onCancel
 }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Lock, User, Eye, EyeOff, CheckCircle2, ArrowRight, Instagram, Linkedin, Twitter, Mail, Phone, MapPin, ExternalLink, ShieldCheck, Globe } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, ArrowRight, Instagram, Linkedin, Twitter, Mail, Phone, MapPin, ExternalLink, ShieldCheck } from 'lucide-react';
 import KVKKModal from '../Modals/KVKKModal';
 import CookieConsent from '../Modals/CookieConsent';
 

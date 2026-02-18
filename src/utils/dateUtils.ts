@@ -41,7 +41,7 @@ export const getDaysInMonthArray = (date: Date): Date[] => {
 
 // Takvim grid'i için günleri al (önceki ve sonraki aydan da)
 export const getCalendarDays = (date: Date): Date[] => {
-  const { start, end } = getMonthRange(date);
+  const { start } = getMonthRange(date);
 
   // Haftanın ilk günü Pazartesi (1) olduğu için
   const firstDayOfWeek = 1;

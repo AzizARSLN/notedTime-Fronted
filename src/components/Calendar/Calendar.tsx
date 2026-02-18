@@ -29,8 +29,6 @@ interface CalendarProps {
   travels: Travel[];
   counters: Counter[];
   onDateSelect?: (date: string) => void;
-  onQuickAction?: (action: string, moduleId: string) => void;
-  onSelectModule?: (moduleType: 'financial' | 'reminder' | 'note' | 'travel' | 'counter') => void;
 }
 
 const Calendar: React.FC<CalendarProps> = ({
@@ -206,6 +204,7 @@ const Calendar: React.FC<CalendarProps> = ({
                   reminders={reminders.filter(r => r.date === dayString)}
                   notes={notes.filter(n => typeof n.date === 'string' ? n.date === dayString : n.date.start === dayString || n.date.end === dayString)}
                   travels={travels.filter(t => t.dateRange.start === dayString || t.dateRange.end === dayString)}
+                  counters={counters.filter(c => c.date === dayString)}
                 />
               );
             })}
